@@ -1,0 +1,7 @@
+<aura:event type="COMPONENT" description="Event template"
+                             access="global" >
+  <aura:attribute name="fieldSetName"
+                  type="String" />
+  <aura:attribute name="requiredFields"
+                  type="String[]" />
+</aura:event>

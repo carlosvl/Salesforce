@@ -1,0 +1,19 @@
+<aura:component >
+
+  <aura:attribute name="fh"
+                  type="FieldHistory"
+                  required="true" />
+                  
+  <aura:if isTrue="{!v.fh &amp;&amp; v.fh.actionString != null}">
+      <th scope="row">
+        <div class="slds-truncate"><ui:outputDateTime value="{!v.fh.history.CreatedDate}"
+                                                      format="M/d/yyyy h:mm a" /></div>
+      </th>
+      <td>
+        <div class="slds-truncate"><ui:outputText value="{!v.fh.history.CreatedBy.Name}" /></div>
+      </td>
+      <td>
+        <div class="slds-truncate"><aura:unescapedHtml value="{!v.fh.actionString}" /></div>
+      </td>
+  </aura:if>
+</aura:component>

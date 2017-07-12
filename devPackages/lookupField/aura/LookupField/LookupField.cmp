@@ -1,0 +1,92 @@
+<aura:component access="global"
+                controller="LookupFieldController">
+
+  <aura:handler name="init"
+                value="{!this}"
+                action="{!c.doInit}"/>
+
+  <aura:handler event="c:LookupSelection"
+                name="lookupResultSelected"
+                action="{!c.handleLookupSelection}" />
+  
+  <aura:attribute name="referenceObjectName"
+                  type="String"
+                  required="true"
+                  access="global" />
+  <aura:attribute name="fieldLabel"
+                  required="true"
+                  access="global"
+                  type="String" />
+  <aura:attribute name="showResults"
+                  type="Boolean"
+                  default="false"
+                  access="private" />
+  <aura:attribute name="required"
+                  type="Boolean"
+                  default="false"
+                  access="global" />
+  <aura:attribute name="searchTerm"
+                  type="String"
+                  access="private" />
+  <aura:attribute name="referenceObjectId"
+                  type="Id"
+                  access="global" />
+  <aura:attribute name="lookupSearchResults"
+                  type="SObject[]"
+                  access="private" />
+  <aura:attribute name="selectedReference"
+                  type="SObject"
+                  access="private" />
+
+  <aura:attribute name="resultComponents"
+                  type="Aura.Component[]"
+                  access="private" />
+
+  <span><aura:if isTrue="{!v.selectedReference == null}">
+    <div class="slds-form-element slds-lookup"
+         data-select="single"
+         aura:id="lookupDiv">
+      <label class="slds-form-element__label"><aura:if isTrue="{!v.required}"><abbr class="slds-required" title="required">*</abbr></aura:if>{!v.fieldLabel}</label>
+      <div class="slds-form-element__control">
+        <div class="slds-input-has-icon slds-input-has-icon--right">
+          <lightning:icon iconName="utility:search"
+                          class="slds-input__icon searchIcon" 
+                          size="x-small" />
+                  
+          <ui:inputText class="slds-lookup__search-input slds-input"
+                        value="{!v.searchTerm}"
+                        updateOn="keyup"
+                        keyup="{!c.fieldChanged}" />
+        </div>
+      </div>
+      <div class="slds-lookup__menu">
+        <ul class="slds-lookup__list" role="listbox">
+            <span><aura:iteration items="{!v.resultComponents}"
+                            var="rc">
+              <li class="slds-lookup__item">
+                {!rc}
+              </li>
+            </aura:iteration></span>
+        </ul>
+      </div>
+    </div>
+  </aura:if></span>
+
+  <span><aura:if isTrue="{!v.selectedReference != null}">
+    <div class="slds-form-element slds-lookup" data-select="single">
+      <span class="slds-form-element__label"><aura:if isTrue="{!v.required}"><abbr class="slds-required" title="required">*</abbr></aura:if>{!v.fieldLabel}</span>
+      <div class="slds-form-element__control">
+        <div class="slds-pill_container">
+          <span class="slds-pill slds-size--1-of-1">
+            <span class="slds-pill__label" title="{!v.selectedReference.Name}">{!v.selectedReference.Name}</span>
+            <lightning:button iconName="utility:close"
+                                      onclick="{!c.clearLookup}"
+                                      class="slds-button slds-button--icon slds-pill__remove"
+                                      variant="base" />
+          </span>
+        </div>
+      </div>
+    </div>
+  </aura:if></span>
+
+</aura:component>

@@ -1,0 +1,14 @@
+/* Hide Search bar */
+.body-search {
+   display: none;
+}
+
+/* Move Profile menu to the right */
+.siteforceNapiliBody .cProfileCon {
+   float: right;
+}
+
+/* Hide Save & New button from Edit modal */
+.forceModalActionContainer--footerAction .forceActionButton[title="Save & New"] {
+  display: none;
+}

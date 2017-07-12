@@ -1,0 +1,93 @@
+<aura:component >
+
+  <aura:handler name="init"
+                value="{!this}"
+                action="{!c.doInit}"/>
+  <aura:handler event="c:FieldSetFieldDependency"
+                action="{!c.handleDependencyEvent}"/>
+  <aura:handler event="c:FieldSetVisibilityChange"
+                action="{!c.handleVisibilityEvent}"/>
+  <aura:handler name="change" 
+                value="{!v.dateValue}"
+                action="{!c.dateChange}" />
+
+  <aura:attribute name="field"
+                  type="FieldSetField"
+                  required="true" />
+  <aura:attribute name="formId"
+                  type="String"
+                  required="true" />
+  <aura:attribute name="currentObject"
+                  type="SObject"
+                  required="true" />
+  <aura:attribute name="registrationStyle"
+                  type="Boolean"
+                  default="false" />
+  <aura:attribute name="readOnly"
+                  type="Boolean"
+                  default="false"
+                  access="global" />
+  <aura:attribute name="objectDescribe"
+                  type="SObjectDescribe" />
+
+  <aura:attribute name="fieldComponent"
+                  type="Aura.Component"
+                  access="private" />
+
+  <aura:attribute name="dateValue"
+                  type="Date"
+                  access="private" />
+
+
+  <aura:registerEvent name="fieldUpdated"
+                      type="c:FieldSetFieldChanged"/>
+  <aura:registerEvent name="fieldDependencyEvent"
+                      type="c:FieldSetFieldDependency"/>
+  <aura:registerEvent name="fieldSetVisibilityChange"
+                      type="c:FieldSetVisibilityChange"/>
+
+  <span><aura:if isTrue="{!v.field.isVisible}">
+
+  <span><aura:if isTrue="{!!v.registrationStyle}"><div class="slds-form-element slds-m-top--medium">
+    <aura:if isTrue="{!v.field.type == 'BOOLEAN'}">
+      <label class="slds-checkbox">
+        {!v.fieldComponent}
+        <span class="slds-checkbox--faux"></span>
+        <span class="slds-form-element__label">{!v.field.fieldLabel}
+          <aura:if isTrue="{!v.field.helpText != null}">&nbsp;({!v.field.helpText})</aura:if></span>
+      </label>
+    </aura:if>
+
+    <aura:if isTrue="{!v.field.type == 'REFERENCE'}">
+      <c:LookupField field="{!v.field}"
+                     readOnly="{!v.readOnly}"
+                     currentObject="{!v.currentObject}" />
+    </aura:if>
+
+    <aura:if isTrue="{!v.field.type != 'BOOLEAN' &amp;&amp; v.field.type != 'REFERENCE'}">
+    <label class="slds-form-element__label"><aura:if isTrue="{!v.field.required}"><abbr class="slds-required" title="required">*</abbr></aura:if>{!v.field.fieldLabel}
+      <aura:if isTrue="{!v.field.helpText != null}">&nbsp;({!v.field.helpText})</aura:if>
+    </label>
+    <div class="slds-form-element__control">
+      {!v.fieldComponent}
+    </div>
+  </aura:if>
+  </div></aura:if></span>
+
+  <span><aura:if isTrue="{!v.registrationStyle}">
+    <div class="input-div">
+      <div class="{!(v.field.required ? 'required-field' : '')}">
+        <aura:if isTrue="{!v.field.type == 'PICKLIST'}">
+          <div class="picklist-label">
+            {!v.field.fieldLabel}
+          </div>
+        </aura:if>
+        <div>
+          {!v.fieldComponent}
+        </div>
+      </div>
+    </div>
+  </aura:if></span>
+
+  </aura:if></span>
+</aura:component>

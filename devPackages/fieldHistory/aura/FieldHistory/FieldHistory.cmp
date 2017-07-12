@@ -1,0 +1,68 @@
+<aura:component controller="FieldHistoryController"
+                implements="force:hasRecordId,flexipage:availableForRecordHome"
+                access="global">
+
+  <aura:handler name="init"
+                value="{!this}"
+                action="{!c.doInit}"/>
+
+  <aura:handler event="force:refreshView"
+                action="{!c.doInit}" />
+
+  <aura:attribute name="numberOfHistories"
+                  type="Integer"
+                  access="private"
+                  default="0" />
+  <aura:attribute name="iconName"
+                  type="String"
+                  default="standard:call_history"
+                  access="global" />
+  <aura:attribute name="historyData"
+                  type="FieldHistory[]"
+                  access="private" />
+
+  <aura:if isTrue="{!v.historyData}">
+    <article class="slds-card">
+      <div class="slds-card__header slds-grid">
+        <header class="slds-media slds-media--center slds-has-flexi-truncate">
+          <aura:if isTrue="{!v.iconName != null}">
+            <div class="slds-media__figure">
+              <lightning:icon iconName="{!v.iconName}"
+                              size="small" />
+            </div>
+          </aura:if>
+          <div class="slds-media__body slds-truncate">
+            <h2>
+              <a href="javascript:void(0);" class="slds-text-link--reset">
+                <span class="slds-text-heading--small">Field History ({!v.numberOfHistories})</span>
+              </a>
+            </h2>
+          </div>
+        </header>
+      </div>
+      <div class="slds-card__body">
+        <table class="slds-table slds-table--bordered slds-no-row-hover slds-table--cell-buffer">
+          <thead>
+            <tr class="slds-text-title--caps">
+              <th scope="col">
+                <div class="slds-truncate" title="Name">Date</div>
+              </th>
+              <th scope="col">
+                <div class="slds-truncate" title="Company">User</div>
+              </th>
+              <th scope="col">
+                <div class="slds-truncate" title="Title">Action</div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <aura:iteration items="{!v.historyData}"
+                            var="hd">
+              <tr class="slds-hint-parent"><c:FieldHistoryDetail fh="{!hd}" /></tr>
+            </aura:iteration>
+          </tbody>
+        </table>
+      </div>
+    </article>
+  </aura:if>
+</aura:component>

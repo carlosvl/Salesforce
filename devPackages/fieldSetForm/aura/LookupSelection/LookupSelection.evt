@@ -1,0 +1,5 @@
+<aura:event type="COMPONENT" description="Event template"
+            access="global">
+  <aura:attribute name="selectedResult"
+                  type="SObject" />
+</aura:event>

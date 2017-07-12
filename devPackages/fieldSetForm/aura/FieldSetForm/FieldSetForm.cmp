@@ -1,0 +1,73 @@
+<aura:component controller="FieldSetFormController"
+                access="global">
+
+  <ltng:require scripts="{!join(',', 
+                         $Resource.FrontEnd + '/connection.js', 
+                         $Resource.FrontEnd + '/picklistHelper.js')}"
+                afterScriptsLoaded="{!c.doInit}" />
+
+  <aura:handler event="c:FieldSetFieldChanged"
+                name="fieldUpdated"
+                action="{!c.handleFieldChanged}" />
+  <aura:handler event="c:ClearFieldSetForm"
+                action="{!c.handleClearFieldSetForm}"/>
+
+
+  <aura:registerEvent name="formUpdated"
+                      type="c:FieldSetFormUpdate" />
+                
+  <aura:attribute name="fieldSetName"
+                  type="String"
+                  required="true"
+                  access="global" />
+  <aura:attribute name="currentObject"
+                  type="SObject"
+                  required="true"
+                  access="global" />
+  <aura:attribute name="registrationStyle"
+                  type="Boolean"
+                  default="false"
+                  access="global" />
+  <aura:attribute name="readOnly"
+                  type="Boolean"
+                  default="false"
+                  access="global" />
+  <aura:attribute name="formClass"
+                  type="String"
+                  default="slds-form--stacked"
+                  access="global" />
+  <aura:attribute name="globalId"
+                  type="String"
+                  access="private" />
+
+  <aura:attribute name="fields"
+                  type="FieldSetField[]"
+                  access="private" />
+  <aura:attribute name="objectDescribe"
+                  type="SObjectDescribe"
+                  access="private" />
+  <aura:attribute name="showLoading"
+                  type="Boolean"
+                  access="private"
+                  default="true" />
+
+  <span><aura:if isTrue="{!v.showLoading}"><div class="slds-spinner_container">
+    <div class="slds-spinner slds-spinner--medium" aria-hidden="false" role="alert">
+      <div class="slds-spinner__dot-a"></div>
+      <div class="slds-spinner__dot-b"></div>
+    </div>
+  </div></aura:if></span>
+
+  <div class="{!v.formClass}">
+    <span><aura:if isTrue="{!v.objectDescribe != null}">
+    <aura:iteration items="{!v.fields}"
+                    var="f">
+      <span><c:FieldSetFormField field="{!f}"
+                                 currentObject="{!v.currentObject}"
+                                 objectDescribe="{!v.objectDescribe}"
+                                 readOnly="{!v.readOnly}"
+                                 registrationStyle="{!v.registrationStyle}"
+                                 formId="{!v.globalId}" /></span>
+    </aura:iteration></aura:if></span>
+  </div>
+</aura:component>

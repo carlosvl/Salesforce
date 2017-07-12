@@ -1,0 +1,150 @@
+<project name="HEDA Resource Management" default="test" basedir="." xmlns:sf="antlib:com.salesforce">
+
+  <property file="../build.properties"/>
+  <property environment="env"/>
+  <property name="zip-src" value="toCompress" />
+  <property name="resource-dir" value="staticresources" />
+  <property name="resource-name" value="FrontEnd" />
+
+  <target name="zip" depends="clean">
+    <zip destfile="${resource-dir}/${resource-name}.resource"
+        basedir="${zip-src}"
+        excludes="dont*.*" />
+  </target>
+
+  <target name="clean">
+		<delete file="${resource-dir}/${resource-name}.resource" />
+	</target>
+
+  <target name="setResourceName">
+    <replaceregexp match="${resourceNameTemplate}"
+                   replace="${resource-name}"
+                   flags="gs">
+      <fileset dir="./toCompress/app">
+        <include name="app.js" />
+        <include name="surveyApp.js" />
+      </fileset>
+    </replaceregexp>
+  </target>
+
+  <target name="revertResourceName">
+    <replaceregexp match="${resource-name}"
+                   replace="${resourceNameTemplate}"
+                   flags="gs" >
+      <fileset dir="./toCompress/app">
+        <include name="app.js" />
+        <include name="surveyApp.js" />
+      </fileset>
+    </replaceregexp>
+  </target>
+
+  <target name="setResourceNameProd">
+    <replaceregexp match="${resourceNameTemplate}"
+                   replace="${namespacePrefix}__${resource-name}"
+                   flags="gs">
+      <fileset dir="./toCompress/app">
+        <include name="app.js" />
+        <include name="surveyApp.js" />
+      </fileset>
+    </replaceregexp>
+  </target>
+
+  <target name="revertResourceNameProd">
+    <replaceregexp match="${namespacePrefix}__${resource-name}"
+                   replace="${resourceNameTemplate}"
+                   flags="gs" >
+      <fileset dir="./toCompress/app">
+        <include name="app.js" />
+        <include name="surveyApp.js" />
+      </fileset>
+    </replaceregexp>
+  </target>
+
+    <target name="addNamespace">
+      <replaceregexp match="([a-zA-Z0-9_]+__[c|r][^a-zA-Z0-9_-])"
+                     replace="${namespacePrefix}__\1"
+                     flags="gs">
+          <fileset dir="./toCompress">
+            <include name="**/app/**"/>
+          </fileset>
+      </replaceregexp>
+        <replaceregexp match="(log\.[a-z]+\([^\(\)]+\);)"
+                       replace="//\1"
+                       flags="gs">
+            <fileset dir="./toCompress">
+              <include name="**/app/**"/>
+            </fileset>
+        </replaceregexp>
+    </target>
+
+
+
+  <target name="removeNamespace">
+    <replaceregexp match="${namespacePrefix}__([a-zA-Z0-9_]+__[c|r][^a-zA-Z0-9_-])"
+                   replace="\1"
+                   flags="gs">
+        <fileset dir="./toCompress">
+          <include name="**/app/**"/>
+        </fileset>
+    </replaceregexp>
+      <replaceregexp match="//(log\.[a-z]+\([^\(\)]+\);)"
+                     replace="\1"
+                     flags="gs">
+          <fileset dir="./toCompress">
+            <include name="**/app/**"/>
+          </fileset>
+      </replaceregexp>
+  </target>
+
+  <target name="deployProd"
+          depends="setResourceNameProd,addNamespace,zip,performProdDeployment,removeNamespace,revertResourceNameProd" />
+
+  <target name="performProdDeployment">
+    <echo message="Deploy Info:" />
+    <echo message=" user = ${deployment.username}" />
+    <sf:deploy username="${deployment.username}"
+               password="${deployment.password}"
+               serverurl="${deployment.serverurl}"
+               deployRoot="."
+               maxPoll="1000"
+               pollWaitMillis="10000" />
+  </target>
+
+  <target name="validate"
+          depends="zip">
+    <echo message="Validate Info:" />
+    <echo message="  user = ${dev.username}" />
+    <sf:deploy username="${dev.username}"
+               password="${dev.password}"
+               serverurl="${dev.serverurl}"
+               deployRoot="."
+               maxPoll="1000"
+               pollWaitMillis="10000"
+               checkOnly="true" />
+  </target>
+
+  <target name="deploy"
+          depends="zip">
+    <echo message="Deploy Info:" />
+    <echo message=" user = ${dev.username}" />
+    <sf:deploy username="${dev.username}"
+               password="${dev.password}"
+               serverurl="${dev.serverurl}"
+               deployRoot="."
+               maxPoll="1000"
+               pollWaitMillis="10000" />
+  </target>
+
+  <target name="deployQa"
+          depends="zip">
+    <echo message="Deploy Info:" />
+    <echo message=" user = ${qa.username}" />
+    <sf:deploy username="${qa.username}"
+               password="${qa.password}"
+               serverurl="${qa.serverurl}"
+               deployRoot="."
+               maxPoll="1000"
+               pollWaitMillis="10000" />
+  </target>
+
+</project>

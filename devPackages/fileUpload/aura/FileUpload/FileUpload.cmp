@@ -1,0 +1,21 @@
+<aura:component controller="FileUploadController" 
+  implements="flexipage:availableForRecordHome,forceCommunity:availableForAllPageTypes,force:hasRecordId">
+
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="fileReady" type="Boolean" default="false"/>
+  <aura:attribute name="uploading" type="Boolean" default="false"/>
+
+  <aura:handler name="change" value="{!v.numItems}" action="{!c.itemsChange}"/>
+
+  <div>
+    <div class="slds-text-heading--medium slds-m-bottom--small">Upload File</div>
+    <input type="file" class="file" aura:id="file" onchange="{!c.handleFileChange}" />
+    <!-- <lightning:input type="file" label="Upload File" aura:id="file" name="file" multiple="false" accept="image/png, .zip, image/jpg" onchange="{!c.handleFileChange}"/> -->
+    <ui:button label="Save" disabled="{!!v.fileReady}" press="{!c.save}"/>
+
+    <aura:if isTrue="{!v.uploading}">
+      <lightning:spinner aura:id="mySpinner" />
+    </aura:if>
+  </div>
+
+</aura:component>

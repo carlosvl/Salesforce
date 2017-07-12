@@ -1,0 +1,13 @@
+<aura:component >
+
+  <aura:attribute name="currentObject"
+                  type="SObject"
+                  required="false" />
+
+  <aura:registerEvent name="lookupResultSelected"
+                      type="c:LookupSelection" />
+
+  <ui:outputURL label="{!v.currentObject.Name}"
+                click="{!c.selectResult}"
+                value="" />
+</aura:component>

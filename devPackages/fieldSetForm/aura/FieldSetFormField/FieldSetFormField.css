@@ -1,0 +1,16 @@
+.THIS {
+}
+
+.THIS .required {
+  border-left: 2px solid red;
+    padding-left: 1px;
+}
+
+.THIS .multipicklist {
+  height: 150px;
+}
+
+.THIS .input-div select {
+  width: 100%;
+  color: #000000;
+}

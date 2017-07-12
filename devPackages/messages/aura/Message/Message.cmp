@@ -1,0 +1,38 @@
+<aura:component access="global">
+
+  <aura:handler name="init"
+                value="{!this}"
+                action="{!c.doInit}" />
+  
+  <aura:attribute name="severity"
+                  type="String"
+                  default="error"
+                  access="global" />
+  <aura:attribute name="title"
+                  type="String"
+                  default="Error"
+                  access="global" />
+  <aura:attribute name="messageErrors"
+                  type="Object[]" />
+  <aura:attribute name="fieldErrors"
+                  type="Object[]"
+                  access="private" />
+
+  <ui:message severity="{!v.severity}"
+              title="{!v.title}">
+
+    <aura:iteration items="{!v.messageErrors}"
+                    var="me">
+      
+        <span><aura:iteration items="{!me.pageErrors}"
+                        var="pe">
+          <p><aura:unescapedHtml value="{!pe.message}" /></p>
+        </aura:iteration></span>
+      
+        <span><aura:iteration items="{!v.fieldErrors}"
+                        var="fe">
+          <p><aura:unescapedHtml value="{!fe.message}" /></p>
+        </aura:iteration></span>
+    </aura:iteration>
+  </ui:message>
+</aura:component>

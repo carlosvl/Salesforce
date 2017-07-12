@@ -1,0 +1,7 @@
+<aura:event type="APPLICATION" description="Event template"
+            access="global">
+  <aura:attribute name="fieldName"
+                  type="String" />
+  <aura:attribute name="formId"
+                  type="Id" />
+</aura:event>

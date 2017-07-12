@@ -1,0 +1,99 @@
+<aura:component controller="LookupFieldController"
+                access="global">
+
+  <aura:attribute name="field"
+                  type="FieldSetField"
+                  required="true" />
+  <aura:attribute name="currentObject"
+                  type="SObject"
+                  required="true" />
+  <aura:attribute name="lookupSearchResults"
+                  type="SObject[]"
+                  access="private" />
+  <aura:attribute name="showResults"
+                  type="Boolean"
+                  default="false"
+                  access="private" />
+  <aura:attribute name="searchTerm"
+                  type="String"
+                  access="private" />
+  <aura:attribute name="selectedResult"
+                  type="SObject"
+                  access="private" />
+  <aura:attribute name="displayFieldList"
+                  type="String[]"
+                  access="private" />
+  <aura:attribute name="readOnly"
+                  type="Boolean"
+                  default="false" />
+
+  <aura:registerEvent name="fieldUpdated"
+                      type="c:FieldSetFieldChanged" />
+  <aura:registerEvent name="fieldSetVisibilityChange"
+                      type="c:FieldSetVisibilityChange" />
+
+  <aura:handler event="c:LookupSelection"
+                name="lookupResultSelected"
+                action="{!c.handleLookupSelection}" />
+  <aura:handler name="init"
+                value="{!this}"
+                action="{!c.doInit}"/>
+  <aura:handler event="c:FieldSetDataChanged"
+                action="{!c.handleFieldSetDataChange}" />
+
+
+
+  <div class="slds-lookup" data-select="single" data-scope="single" data-typeahead="false">
+    <div class="slds-form-element">
+
+      <aura:if isTrue="{!v.readOnly}">
+        {!v.selectedResult.Name}
+      <aura:set attribute="else">
+      <label class="slds-form-element__label" for="lookup">
+        <aura:if isTrue="{!v.field.required}"><abbr class="slds-required" title="required">*</abbr></aura:if>
+        {!v.field.fieldLabel}<aura:if isTrue="{!v.field.helpText != null}">&nbsp;({!v.field.helpText})</aura:if>
+      </label>
+
+      <span><aura:if isTrue="{!v.selectedResult != null}">
+        <div class="slds-form-element__control">
+          <div class="slds-pill_container">
+            <span class="slds-pill slds-size--1-of-1">
+              <span class="slds-pill__label" title="{!v.selectedResult.Name}">{!v.selectedResult.Name}</span>
+              <lightning:button iconName="utility:close"
+                                        onclick="{!c.clearLookup}"
+                                        class="slds-button slds-button--icon slds-pill__remove"
+                                        variant="base" />
+            </span>
+          </div>
+        </div>
+      </aura:if></span>
+
+      <span><aura:if isTrue="{!v.selectedResult == null}">
+          <div class="slds-form-element__control">
+          <div class="slds-pill_container slds-hide"></div>
+          <ui:inputText class="slds-input slds-show"
+                        keyup="{!c.fieldChanged}"
+                        updateOn="keyup"
+                        value="{!v.searchTerm}" />
+        </div>
+      </aura:if></span>
+    </aura:set>
+    </aura:if>
+    </div>
+
+    <span><aura:if isTrue="{!v.showResults}">
+    <div class="slds-lookup__menu"
+         role="listbox">
+      <ul class="slds-lookup__list"
+          role="presentation">
+        <aura:iteration items="{!v.lookupSearchResults}"
+                        var="lur">
+          <li class="slds-lookup__item">
+            <c:LookupSearchResult currentObject="{!lur}"
+                                  fieldList="{!v.displayFieldList}" />
+          </li>
+        </aura:iteration>
+      </ul>
+    </div></aura:if></span>
+  </div>
+</aura:component>

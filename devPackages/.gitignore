@@ -1,0 +1,7 @@
+.project
+.settings/*
+shell/sfdclogin.xml
+build.properties
+.DS_Store
+*/ResourceManagement/staticresources/*.resource
+*.properties

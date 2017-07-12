@@ -1,0 +1,4 @@
+<design:component>
+    <design:attribute name="iconName"
+                      label="Icon Name" />
+</design:component>

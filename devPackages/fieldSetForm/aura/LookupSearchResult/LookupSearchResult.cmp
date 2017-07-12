@@ -1,0 +1,20 @@
+<aura:component >
+  <aura:handler name="init"
+                value="{!this}"
+                action="{!c.doInit}"/>
+
+  <aura:attribute name="currentObject"
+                  type="SObject"
+                  required="false" />
+  <aura:attribute name="fieldList"
+                  type="String[]" />
+  <aura:attribute name="urlLabel"
+                  type="String"
+                  access="private" />
+
+  <aura:registerEvent name="lookupResultSelected"
+                      type="c:LookupSelection" />
+
+  <ui:outputURL label="{!v.urlLabel}"
+                click="{!c.selectResult}" />
+</aura:component>
