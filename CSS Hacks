@@ -1,0 +1,3 @@
+//this hides the account option in a community
+
+.myAccount {display:none;}
